@@ -1,6 +1,14 @@
 <!doctype html>
 <html>
 <head>
+<SCRIPT TYPE="text/javascript">
+$('#loaded').hide();
+$(window).ready(function() {
+    $('#loading').hide();
+	$('#loaded').show();
+});
+
+</SCRIPT>
 <meta charset="utf-8">
 <title>Read Mail</title>
 </head>
@@ -71,10 +79,24 @@ if ($email_body == "") {
 }
 imap_close($imap);
 
+#################################POPULATE DROPDOWN
+     //Create Connection
+$conn2 = new mysqli($server_url,$server_login,$server_pass,$server_dbname);
+     // Check connection
+if ($conn2->connect_error) {
+    die("Connection failed: " . $conn2->connect_error);
+}
+$sql2 = "SELECT `ticket_status` FROM `ticket_status_types` WHERE 1";
+$result2 = $conn->query($sql2);
 
+	
 ?>
 
+<div id="loading">
+Now Loading..
+</div>
 
+<div id='loaded'>
 <form id="form1" name="form1" method="post">
   <table width="453" border="0">
     <tr>
@@ -106,10 +128,16 @@ imap_close($imap);
         </p>
         <p>
           <label for="select">Ticket Status:</label>
-          <select name="select" id="select">
-          </select>
-          
-          
+     
+<?php
+echo "<select>";
+    while($row = $result2->fetch_array()){
+         echo "<option>";
+         echo $row['ticket_status'];
+         echo "</option>"; 
+    }
+    echo "</select>";
+          ?>
  
           
           
@@ -123,6 +151,6 @@ imap_close($imap);
 
 
 
-
+</div>
 </body>
 </html>
